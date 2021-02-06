@@ -3,15 +3,14 @@ package ro.playGame;
 import ro.playGame.Computer;
 import ro.playGame.Player;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
     public Player player;
     public Computer computer;
     public static Scanner scanner = new Scanner(System.in);
     public static Random random = new Random();
-    public static final int GAME_LIMIT = 3;
+    public List<Choice> choices;
 
 
     public static Player assignPlayer() {
@@ -48,7 +47,7 @@ public class Game {
                 System.out.println("Computer wins");
                 break;
         }
-
+        System.out.println();
         System.out.println("Play again? Y/N");
         String play = scanner.next().toUpperCase();
 
@@ -65,51 +64,46 @@ public class Game {
         String choice = scanner.next().toUpperCase();
         while (!"R".equals(choice.toUpperCase()) &&
                 !"P".equals(choice.toUpperCase()) &&
-        !"S".equals(choice.toUpperCase())) {
+                !"S".equals(choice.toUpperCase())) {
             System.out.println("Enter a valid statement");
             choice = scanner.next().toUpperCase();
         }
         switch (choice) {
             case "R":
-                player.choice = 0;
+                player.choice = Choice.valueOf("ROCK");
                 break;
             case "P":
-                player.choice=1;
+                player.choice = Choice.valueOf("PAPER");
                 break;
             case "S":
-                player.choice=2;
+                player.choice = Choice.valueOf("SCISSORS");
                 break;
 
         }
 
-        computer.choice = random.nextInt(GAME_LIMIT);
 
-        switch (computer.choice){
-            case 0:
-                System.out.println("Computer: Rocks");break;
-            case 1:
-                System.out.println("Computer: Paper");break;
-            case 2:
-                System.out.println("Computer: Scissors");break;
+       computer.choice=getRandomChoice();
+        System.out.println("Computer: " + computer.choice);
+
+        int count;   //tie      0 for tie,1 for player, 2 for computer
+
+        if (player.choice.equals(computer.choice)) {
+            count = 0;
+        } else if ((player.choice.name().equals("ROCK") && computer.choice.name().equals("SCISSORS")) ||
+                (player.choice.name().equals("PAPER") && computer.choice.name().equals("ROCK")) ||
+                player.choice.name().equals("SCISSORS") && computer.choice.name().equals("PAPER")) {
+            count = 1;
+        } else {
+            count = 2;
         }
 
-        int count = 0;   //tie      0 for tie,1 for player, 2 for computer
-
-
-        if (player.choice == 0 && computer.choice == 2) {
-            count = 1;
-        } else if (player.choice == 0 && computer.choice == 1) {
-            count = 2;
-        } else if (player.choice == 1 && computer.choice == 0) {
-            count = 1;
-        } else if (player.choice == 1 && computer.choice == 2) {
-            count = 2;
-        } else if (player.choice == 2 && computer.choice == 0) {
-            count = 2;
-        } else if (player.choice == 2 && computer.choice == 1) {
-            count = 1;
-        }
         return count;
 
+    }
+
+    public Choice getRandomChoice() {
+        choices=Arrays.asList(Choice.values());
+        Collections.shuffle(choices);
+        return choices.get(0);
     }
 }
