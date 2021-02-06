@@ -14,12 +14,10 @@ public class Game {
     public static final int GAME_LIMIT = 3;
 
 
-
     public static Player assignPlayer() {
         System.out.println("Enter name:");
         String playerName = scanner.next();
-        Player player = new Player(playerName);
-        return player;
+        return new Player(playerName);
     }
 
 
@@ -56,34 +54,49 @@ public class Game {
 
         if ("Y".equals(play)) {
             play();
-        } else if ("N".equals(play)) {
         }
 
     }
 
 
-   /* public void sayAnything() {
-        System.out.println(player.name);
-    }*/
-
-
     public int decideWinner() {
 
-        System.out.println("Enter choice");
-        player.choice = scanner.nextInt();
-        while (player.choice>2){
-            System.out.println("Enter a valid number");
-            player.choice = scanner.nextInt();     }
+        System.out.println("Enter choice / R, P, S");
+        String choice = scanner.next().toUpperCase();
+        while (!"R".equals(choice.toUpperCase()) &&
+                !"P".equals(choice.toUpperCase()) &&
+        !"S".equals(choice.toUpperCase())) {
+            System.out.println("Enter a valid statement");
+            choice = scanner.next().toUpperCase();
+        }
+        switch (choice) {
+            case "R":
+                player.choice = 0;
+                break;
+            case "P":
+                player.choice=1;
+                break;
+            case "S":
+                player.choice=2;
+                break;
+
+        }
+
         computer.choice = random.nextInt(GAME_LIMIT);
-        System.out.println(computer.choice);
+
+        switch (computer.choice){
+            case 0:
+                System.out.println("Computer: Rocks");break;
+            case 1:
+                System.out.println("Computer: Paper");break;
+            case 2:
+                System.out.println("Computer: Scissors");break;
+        }
 
         int count = 0;   //tie      0 for tie,1 for player, 2 for computer
 
 
-        if (player.choice == computer.choice) {
-            count = 0;
-
-        } else if (player.choice == 0 && computer.choice == 2) {
+        if (player.choice == 0 && computer.choice == 2) {
             count = 1;
         } else if (player.choice == 0 && computer.choice == 1) {
             count = 2;
@@ -95,7 +108,7 @@ public class Game {
             count = 2;
         } else if (player.choice == 2 && computer.choice == 1) {
             count = 1;
-        } else count = -1;
+        }
         return count;
 
     }
